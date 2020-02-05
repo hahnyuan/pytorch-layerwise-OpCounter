@@ -1,6 +1,6 @@
 # PyTorch-layerwise-OpCounter
 A tool for profile the MACs, parameters, input_shape, output_shape et.al of each layer in Pytorch model.
-Forked from Lyken17/pytorch-OpCounter which is not supporting layer-wise profile.
+Forked from Lyken17/pytorch-OpCounter which is not supporting layer-wise profile and I will follow it.
 
 ## How to install 
     
