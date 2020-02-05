@@ -8,7 +8,7 @@ from setuptools.command.install import install
 
 readme = open('README.md').read()
 
-VERSION = '0.0.31'
+VERSION = '1.0'
 
 requirements = [
     'torch',
@@ -22,12 +22,12 @@ VERSION += "_" + datetime.datetime.now().strftime('%Y%m%d%H%M')[2:]
 
 setup(
     # Metadata
-    name='thop',
+    name='torchlop',
     version=VERSION,
-    author='Ligeng Zhu',
-    author_email='lykensyu+github@gmail.com',
-    url='https://github.com/Lyken17/pytorch-OpCounter/',
-    description='A tool to count the FLOPs of PyTorch model.',
+    author='Hahn Yuan',
+    author_email='yuanzhihang1@126.com',
+    url='https://github.com/hahnyuan/pytorch-layerwise-OpCounter/',
+    description='A tool to layer-wise count the MACs and parameters of PyTorch model.',
     long_description=readme,
     long_description_content_type='text/markdown',
     license='MIT',

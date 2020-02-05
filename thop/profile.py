@@ -55,6 +55,12 @@ register_hooks = {
     nn.UpsamplingNearest2d: count_upsample
 }
 
+def info_hook(m,i,o):
+    m.layer_infos['in_size']=','.join([str(tuple(_.size())) for _ in i])
+    m.layer_infos['out_size']=','.join([str(tuple(_.size())) for _ in o])
+    if hasattr(m, "total_ops") or hasattr(m, "total_params"):
+        m.layer_infos['ops']=int(m.total_ops.item())
+        m.layer_infos['params']=int(m.total_params.item())
 
 def profile(model, inputs, custom_ops=None, verbose=True):
     handler_collection = []
@@ -71,6 +77,12 @@ def profile(model, inputs, custom_ops=None, verbose=True):
 
         m.register_buffer('total_ops', torch.zeros(1))
         m.register_buffer('total_params', torch.zeros(1))
+        m.layer_infos={
+            'type':m.__class__.__name__,
+            'in_size':None,
+            'out_size':None,
+            'ops':None,
+            'params':None}
 
         for p in m.parameters():
             m.total_params += torch.Tensor([p.numel()])
@@ -90,6 +102,8 @@ def profile(model, inputs, custom_ops=None, verbose=True):
                 logger.info("Register FLOP counter for module %s" % str(m))
             handler = m.register_forward_hook(fn)
             handler_collection.append(handler)
+            info_handler=m.register_forward_hook(info_hook)
+            handler_collection.append(info_handler)
 
     training = model.training
 
@@ -101,11 +115,17 @@ def profile(model, inputs, custom_ops=None, verbose=True):
 
     total_ops = 0
     total_params = 0
+    model_name={}
+    layer_infos={}
+    for name,m in model.named_modules():
+        model_name[m]=name
     for m in model.modules():
         if len(list(m.children())) > 0:  # skip for non-leaf module
             continue
         total_ops += m.total_ops
         total_params += m.total_params
+        layer_name=model_name[m]
+        layer_infos[layer_name]=m.layer_infos
 
     total_ops = total_ops.item()
     total_params = total_params.item()
@@ -123,8 +143,9 @@ def profile(model, inputs, custom_ops=None, verbose=True):
             m._buffers.pop("total_ops")
         if "total_params" in m._buffers:
             m._buffers.pop("total_params")
+        
 
-    return total_ops, total_params
+    return total_ops, total_params, layer_infos
 
 
 def profile_2(model: nn.Module, inputs, custom_ops=None, verbose=True):

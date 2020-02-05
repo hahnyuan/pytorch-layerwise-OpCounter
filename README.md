@@ -1,21 +1,23 @@
-# THOP: PyTorch-OpCounter
+# PyTorch-layerwise-OpCounter
+A tool for profile the MACs, parameters, input_shape, output_shape et.al of each layer in Pytorch model.
+Forked from Lyken17/pytorch-OpCounter which is not supporting layer-wise profile.
 
 ## How to install 
     
-`pip install thop` (now continously intergrated on [Github actions](https://github.com/features/actions))
+`pip install torchlop`
 
 OR
 
-`pip install --upgrade git+https://github.com/Lyken17/pytorch-OpCounter.git`
+`pip install --upgrade git+https://github.com/hahnyuan/pytorch-layerwise-OpCounter.git`
     
 ## How to use 
 * Basic usage 
     ```python
     from torchvision.models import resnet50
-    from thop import profile
+    from torchlop import profile
     model = resnet50()
     input = torch.randn(1, 3, 224, 224)
-    macs, params = profile(model, inputs=(input, ))
+    macs, params, layer_infos = profile(model, inputs=(input, ))
     ```    
 
 * Define the rule for 3rd party module.
@@ -30,13 +32,6 @@ OR
                             custom_ops={YourModule: count_your_model})
     ```
     
-* Improve the output readability
-
-    Call `thop.clever_format` to give a better format of the output.
-    ```python
-    from thop import clever_format
-    macs, params = clever_format([flops, params], "%.3f")
-    ```    
     
 ## Results of Recent Models
 
