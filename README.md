@@ -19,6 +19,13 @@ OR
     input = torch.randn(1, 3, 224, 224)
     macs, params, layer_infos = profile(model, inputs=(input, ))
     ```    
+* The layer_infos is a dict that contains the infos for each layer of the pytorch model.
+  * The key is the name of the layer
+  * 'type': the class name of the layer
+  * 'in_size': input size
+  * 'out_size': output size
+  * 'ops': operations (MACs)
+  * 'params': parameters
 
 * Define the rule for 3rd party module.
     ```python
@@ -28,7 +35,7 @@ OR
         # your rule here
     
     input = torch.randn(1, 3, 224, 224)
-    macs, params = profile(model, inputs=(input, ), 
+    macs, params, ayer_infos = profile(model, inputs=(input, ), 
                             custom_ops={YourModule: count_your_model})
     ```
     
