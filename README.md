@@ -35,10 +35,21 @@ OR
         # your rule here
     
     input = torch.randn(1, 3, 224, 224)
-    macs, params, ayer_infos = profile(model, inputs=(input, ), 
+    macs, params, layer_infos = profile(model, inputs=(input, ), 
                             custom_ops={YourModule: count_your_model})
     ```
-    
+* Write the layerwise profile information into a csv file
+    ```python
+    from torchvision.models import resnet50
+    from torchlop import profile
+    from torchlop.rst_process import write_csv
+    model = resnet50()
+    input = torch.randn(1, 3, 224, 224)
+    macs, params, layer_infos = profile(model, inputs=(input, ))
+    csv_file='profile.csv'
+    write_csv(csv_file,layer_infos)
+    ```
+
     
 ## Results of Recent Models
 

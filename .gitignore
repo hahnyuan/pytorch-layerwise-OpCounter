@@ -4,6 +4,7 @@
 # only keep the setup.py under root folder
 ./*.py
 !./setup.py
+*.csv
 
 .idea/
 # Byte-compiled / optimized / DLL files

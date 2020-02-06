@@ -62,6 +62,8 @@ def info_hook(m,i,o):
         m.layer_infos['ops']=int(m.total_ops.item())
         m.layer_infos['params']=int(m.total_params.item())
 
+
+
 def profile(model, inputs, custom_ops=None, verbose=True):
     handler_collection = []
     if custom_ops is None:
